@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walisongo TV</title>
+    <script src="https://cdn.tailwindcss.com/3.4.14"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            background-color: #080B15;
+            color: white;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(to bottom, rgba(8,11,21,0.4), #080B15), 
+                        url('https://picsum.photos/id/1015/1920/1080') center/cover no-repeat;
+        }
+        
+        .card-hover:hover {
+            transform: scale(1.06);
+            transition: all 0.3s ease;
+        }
+        
+        .accent-blue {
+            color: #5879AC;
+        }
+        
+        .bottom-nav {
+            background-color: #080B15;
+            border-top: 1px solid #1F2937;
+        }
+        
+        .modal {
+            animation: modalPop 0.3s ease forwards;
+        }
+        
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+    <!-- DESKTOP NAVBAR -->
+    <nav class="hidden md:flex bg-[#0F172A] border-b border-[#1F2937] px-8 py-5 sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto w-full flex items-center justify-between">
+            <div onclick="navigateTo('home')" class="flex items-center gap-3 cursor-pointer">
+                <div class="text-4xl">🕌</div>
+                <h1 class="text-3xl font-bold tracking-tight accent-blue">Walisongo TV</h1>
+            </div>
+            
+            <div class="flex gap-8 text-sm font-medium">
+                <a onclick="navigateTo('home')" class="hover:text-[#5879AC] cursor-pointer">Beranda</a>
+                <a onclick="navigateTo('search')" class="hover:text-[#5879AC] cursor-pointer">Cari</a>
+                <a onclick="navigateTo('live')" class="hover:text-[#5879AC] cursor-pointer">Siaran Langsung</a>
+                <a onclick="navigateTo('favorites')" class="hover:text-[#5879AC] cursor-pointer">Favorit</a>
+                <a onclick="navigateTo('profile')" class="hover:text-[#5879AC] cursor-pointer">Profil</a>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <button onclick="navigateTo('search')" class="text-xl"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button onclick="toggleAdmin()" class="px-5 py-2 bg-[#5879AC] hover:bg-[#4A6A96] rounded-3xl text-sm font-semibold">Admin</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="max-w-screen-2xl mx-auto">
+
+        <!-- PAGE HOME -->
+        <div id="page-home" class="page">
+            <!-- HERO WALISONGO PEDIA -->
+            <div class="hero-bg h-[520px] flex items-end relative">
+                <div class="px-8 pb-12 max-w-2xl">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="bg-[#5879AC] text-white text-xs px-4 py-1 rounded-full">EDISI: SUNAN KUDUS</span>
+                        <span class="text-[#5879AC] font-bold">WALISONGO PEDIA</span>
+                    </div>
+                    <h1 class="text-6xl font-bold leading-none">WalisongoPedia</h1>
+                    <p class="mt-4 text-xl">Kisah Sunan Kudus sebagai salah satu Walisongo yang berperan penting dalam penyebaran Islam di Jawa</p>
+                    <button onclick="playFeatured()" 
+                            class="mt-8 px-10 py-4 bg-white text-[#080B15] rounded-3xl font-semibold flex items-center gap-3 hover:scale-105 transition">
+                        <i class="fa-solid fa-play"></i> Mulai Tonton
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUDUT BACA -->
+            <div class="px-8 py-10">
+                <h2 class="text-2xl font-semibold mb-6 accent-blue">Sudut Baca Walisongo</h2>
+                <div onclick="openSudutBaca()" class="bg-[#1F2937] rounded-3xl p-6 flex gap-6 cursor-pointer card-hover">
+                    <img src="https://picsum.photos/id/1015/280/160" class="rounded-2xl w-52 object-cover">
+                    <div>
+                        <h3 class="text-xl font-semibold">Grand Final Walisongo Campus Ambassador 2025</h3>
+                        <p class="text-gray-300 mt-3">Universitas Islam Negeri (UIN) Walisongo Semarang sukses menggelar malam puncak Grand Final WCA 2025 pada Sabtu (29/11/2025).</p>
+                        <div class="mt-4 text-xs text-gray-400">29 November 2025 • Berita</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAYANGAN TERBARU / ROWS -->
+            <div class="px-8 space-y-12 pb-12">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4">Tayangan Terbaru</h2>
+                    <div id="terbaru-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4">Edukasi</h2>
+                    <div id="edukasi-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-semibold mb-4">Dakwah</h2>
+                    <div id="dakwah-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE SEARCH -->
+        <div id="page-search" class="page hidden px-8 py-8">
+            <div class="max-w-xl mx-auto">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input id="search-input" type="text" placeholder="Cari judul, kategori..." 
+                           class="w-full bg-[#1F2937] pl-14 pr-6 py-5 rounded-3xl outline-none text-lg"
+                           onkeyup="if(event.key==='Enter') searchContent()">
+                </div>
+            </div>
+            <div id="search-results" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mt-10">
+                <!-- JS populated -->
+            </div>
+        </div>
+
+        <!-- PAGE LIVE -->
+        <div id="page-live" class="page hidden px-8 py-8">
+            <h1 class="text-4xl font-bold mb-2">Siaran Langsung</h1>
+            <div class="bg-black rounded-3xl overflow-hidden mb-10">
+                <video id="live-player" class="w-full aspect-video" controls autoplay loop>
+                    <source src="https://test-streams.mux.dev/x264_480p.mp4" type="video/mp4">
+                </video>
+            </div>
+            <h2 class="text-2xl font-semibold mb-4">Siaran Ulang</h2>
+            <div id="replay-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- JS populated -->
+            </div>
+        </div>
+
+        <!-- PAGE FAVORITES -->
+        <div id="page-favorites" class="page hidden px-8 py-8">
+            <h1 class="text-4xl font-bold mb-8">Favorit Saya</h1>
+            <div id="favorites-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <!-- JS populated -->
+            </div>
+        </div>
+
+        <!-- PAGE PROFILE -->
+        <div id="page-profile" class="page hidden px-8 py-8">
+            <div class="max-w-md mx-auto text-center">
+                <div class="w-28 h-28 mx-auto rounded-3xl overflow-hidden border-4 border-[#5879AC]">
+                    <img src="https://picsum.photos/id/64/200/200" class="w-full h-full object-cover">
+                </div>
+                <h2 class="text-3xl font-bold mt-6">Linyi</h2>
+                <p class="text-gray-400">linyi123@gmail.com</p>
+                
+                <div class="mt-12 space-y-6 text-left">
+                    <div onclick="showRiwayat()" class="flex items-center gap-4 cursor-pointer">
+                        <i class="fa-solid fa-clock text-3xl accent-blue"></i>
+                        <span class="text-lg">Riwayat Tontonan</span>
+                    </div>
+                    <div onclick="showDownload()" class="flex items-center gap-4 cursor-pointer">
+                        <i class="fa-solid fa-download text-3xl accent-blue"></i>
+                        <span class="text-lg">Download Offline</span>
+                    </div>
+                    <div onclick="toggleAdmin()" class="flex items-center gap-4 cursor-pointer">
+                        <i class="fa-solid fa-cog text-3xl accent-blue"></i>
+                        <span class="text-lg">Dashboard Admin</span>
+                    </div>
+                    <div onclick="logout()" class="flex items-center gap-4 cursor-pointer text-red-400">
+                        <i class="fa-solid fa-right-from-bracket text-3xl"></i>
+                        <span class="text-lg">Keluar</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV (Mobile) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-[#080B15] border-t border-[#1F2937] md:hidden flex justify-around py-3 text-xs">
+        <div onclick="navigateTo('home')" class="flex flex-col items-center text-[#5879AC]">
+            <i class="fa-solid fa-house text-2xl"></i><span>Beranda</span>
+        </div>
+        <div onclick="navigateTo('search')" class="flex flex-col items-center">
+            <i class="fa-solid fa-magnifying-glass text-2xl"></i><span>Cari</span>
+        </div>
+        <div onclick="navigateTo('live')" class="flex flex-col items-center">
+            <i class="fa-solid fa-tv text-2xl"></i><span>Live</span>
+        </div>
+        <div onclick="navigateTo('favorites')" class="flex flex-col items-center">
+            <i class="fa-solid fa-star text-2xl"></i><span>Favorit</span>
+        </div>
+        <div onclick="navigateTo('profile')" class="flex flex-col items-center">
+            <i class="fa-solid fa-user text-2xl"></i><span>Profil</span>
+        </div>
+    </div>
+
+    <!-- VIDEO MODAL -->
+    <div id="video-modal" class="hidden fixed inset-0 bg-black/95 z-[999] flex items-center justify-center" onclick="if(event.target.id==='video-modal')closeVideoModal()">
+        <div class="modal bg-[#1F2937] w-full max-w-4xl mx-4 rounded-3xl overflow-hidden">
+            <div class="p-4 flex justify-end">
+                <i onclick="closeVideoModal()" class="fa-solid fa-xmark text-3xl cursor-pointer"></i>
+            </div>
+            <video id="main-video" class="w-full aspect-video" controls></video>
+            <div class="p-8">
+                <h1 id="modal-title" class="text-3xl font-bold"></h1>
+                <p id="modal-desc" class="text-gray-300 mt-3"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div id="admin-panel" class="hidden fixed inset-0 bg-[#080B15] z-[1000] flex flex-col md:flex-row">
+        <div class="w-full md:w-80 bg-[#0F172A] p-6">
+            <h2 class="text-2xl font-bold accent-blue mb-8">Admin Walisongo TV</h2>
+            <div onclick="showAdminSection(1)" class="py-4 px-5 rounded-2xl mb-2 cursor-pointer hover:bg-[#1F2937]">📤 Upload Konten Baru</div>
+            <div onclick="showAdminSection(2)" class="py-4 px-5 rounded-2xl mb-2 cursor-pointer hover:bg-[#1F2937]">📋 Daftar Konten</div>
+            <div onclick="toggleAdmin()" class="mt-12 text-red-400 cursor-pointer">← Kembali ke Aplikasi</div>
+        </div>
+        <div class="flex-1 p-8 overflow-auto">
+            <div id="admin-upload" class="max-w-lg">
+                <h3 class="text-2xl mb-6">Upload Konten Baru</h3>
+                <input id="up-title" placeholder="Judul Konten" class="block w-full mb-4 p-4 bg-[#1F2937] rounded-3xl">
+                <select id="up-category" class="block w-full mb-4 p-4 bg-[#1F2937] rounded-3xl">
+                    <option>News</option><option>Film</option><option>Tastory</option><option>Edukasi</option><option>Dakwah</option>
+                </select>
+                <input id="up-thumb" placeholder="URL Thumbnail" class="block w-full mb-4 p-4 bg-[#1F2937] rounded-3xl">
+                <input id="up-video" placeholder="URL Video" class="block w-full mb-4 p-4 bg-[#1F2937] rounded-3xl">
+                <button onclick="uploadContent()" class="w-full py-5 bg-[#5879AC] rounded-3xl font-semibold">Upload ke Walisongo TV</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Konten sesuai screenshot
+        let contents = [
+            {id:1, title:"Kemennag RI Jateng Dai Muda", category:"Dakwah", duration:"2:27:20", thumb:"https://picsum.photos/id/1015/320/180", video:"https://test-streams.mux.dev/x264_480p.mp4"},
+            {id:2, title:"Sekitar Kita KKN Nusantara", category:"Edukasi", duration:"2:27:20", thumb:"https://picsum.photos/id/201/320/180", video:"https://test-streams.mux.dev/x264_480p.mp4"},
+            {id:3, title:"Ruang Tanya Fakultas Dakwah", category:"Inspiratif", duration:"2:27:20", thumb:"https://picsum.photos/id/301/320/180", video:"https://test-streams.mux.dev/x264_480p.mp4"},
+            {id:4, title:"Ngonten Sambil Makan Mie Ayam", category:"Tastory", duration:"2:27:20", thumb:"https://picsum.photos/id/401/320/180", video:"https://test-streams.mux.dev/x264_480p.mp4"},
+            {id:5, title:"Jangan Takut Coba Lagi", category:"Film", duration:"2:27:20", thumb:"https://picsum.photos/id/501/320/180", video:"https://test-streams.mux.dev/x264_480p.mp4"}
+        ];
+
+        let favorites = [];
+
+        function navigateTo(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`page-${page}`).classList.remove('hidden');
+            if (page === 'home') renderHome();
+            if (page === 'favorites') renderFavorites();
+        }
+
+        function renderHome() {
+            const renderRow = (containerId, items) => {
+                const cont = document.getElementById(containerId);
+                cont.innerHTML = '';
+                items.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'cursor-pointer card-hover';
+                    div.innerHTML = `
+                        <img src="${item.thumb}" class="rounded-3xl w-full aspect-video object-cover">
+                        <p class="mt-3 text-sm font-medium">${item.title}</p>
+                        <p class="text-xs text-gray-400">${item.duration}</p>
+                    `;
+                    div.onclick = () => playVideo(item);
+                    cont.appendChild(div);
+                });
+            };
+
+            renderRow('terbaru-grid', contents);
+            renderRow('edukasi-grid', contents.filter(c => c.category === 'Edukasi'));
+            renderRow('dakwah-grid', contents.filter(c => c.category === 'Dakwah'));
+        }
+
+        function playVideo(item) {
+            document.getElementById('video-modal').classList.remove('hidden');
+            document.getElementById('modal-title').innerText = item.title;
+            const vid = document.getElementById('main-video');
+            vid.src = item.video;
+            vid.play();
+        }
+
+        function closeVideoModal() {
+            const vid = document.getElementById('main-video');
+            vid.pause();
+            document.getElementById('video-modal').classList.add('hidden');
+        }
+
+        function playFeatured() {
+            playVideo(contents[0]);
+        }
+
+        function openSudutBaca() {
+            alert("📖 Grand Final Walisongo Campus Ambassador 2025\n\nDetail acara telah dibuka.");
+        }
+
+        function renderFavorites() {
+            const cont = document.getElementById('favorites-grid');
+            cont.innerHTML = favorites.length === 0 ? 
+                `<div class="col-span-full text-center py-12 text-gray-400">Belum ada favorit</div>` : '';
+            
+            favorites.forEach(id => {
+                const item = contents.find(c => c.id === id);
+                if (!item) return;
+                const div = document.createElement('div');
+                div.className = 'cursor-pointer card-hover';
+                div.innerHTML = `<img src="${item.thumb}" class="rounded-3xl w-full aspect-video object-cover"><p class="mt-3">${item.title}</p>`;
+                div.onclick = () => playVideo(item);
+                cont.appendChild(div);
+            });
+        }
+
+        function searchContent() {
+            const keyword = document.getElementById('search-input').value.toLowerCase();
+            const cont = document.getElementById('search-results');
+            cont.innerHTML = '';
+            const filtered = contents.filter(c => c.title.toLowerCase().includes(keyword));
+            filtered.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'cursor-pointer card-hover';
+                div.innerHTML = `<img src="${item.thumb}" class="rounded-3xl w-full aspect-video object-cover"><p class="mt-3 text-sm">${item.title}</p>`;
+                div.onclick = () => playVideo(item);
+                cont.appendChild(div);
+            });
+        }
+
+        function toggleAdmin() {
+            const admin = document.getElementById('admin-panel');
+            admin.classList.toggle('hidden');
+        }
+
+        function showAdminSection(n) {
+            alert("Fitur Admin Upload Konten aktif.\n\nSilakan isi form di sebelah kiri.");
+        }
+
+        function uploadContent() {
+            const title = document.getElementById('up-title').value;
+            if (title) {
+                alert(`✅ Konten "${title}" berhasil diupload ke Walisongo TV!`);
+                toggleAdmin();
+                renderHome();
+            }
+        }
+
+        function showRiwayat() { alert("Riwayat Tontonan (demo)"); }
+        function showDownload() { alert("Download Offline (demo)"); }
+        function logout() { if(confirm("Keluar?")) location.reload(); }
+
+        // Inisialisasi
+        window.onload = () => {
+            renderHome();
+            navigateTo('home');
+            console.log("%cWalisongo TV - Template Netflix style dengan warna biru sesuai request", "color:#5879AC; font-size:16px");
+        };
+    </script>
+</body>
+</html>
