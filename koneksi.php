@@ -1,6 +1,5 @@
 <?php
-// koneksi.php
-$host = 'localhost';
+$host = 'localhost'; // GANTI INI
 $db   = 'walisongo_tv';
 $user = 'root';
 $pass = '';
