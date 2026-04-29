@@ -39,7 +39,7 @@ if (!isset($_SESSION['login']) || $_SESSION['role'] !== 'admin') {
         $videos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ?>
 
-        <?php if (empty($videos)): ?>
+                <?php if (empty($videos)): ?>
             <div class="bg-[#1F2937] rounded-3xl p-16 text-center">
                 <i class="fa-solid fa-video text-7xl mb-6 text-gray-500"></i>
                 <p class="text-xl text-gray-400">Belum ada video yang ditambahkan</p>
@@ -49,8 +49,11 @@ if (!isset($_SESSION['login']) || $_SESSION['role'] !== 'admin') {
                 <?php foreach ($videos as $video): ?>
                     <div class="bg-[#1F2937] rounded-3xl overflow-hidden group">
                         <div class="relative">
-                            <img src="<?= htmlspecialchars($video['thumbnail'] ?? 'https://picsum.photos/id/1015/600/340') ?>" 
-                                 class="w-full h-48 object-cover">
+                            <!-- PATH DI PERBAIKI DENGAN ../ -->
+                            <img src="../<?= htmlspecialchars($video['thumbnail'] ?? '') ?>" 
+                                 class="w-full h-48 object-cover"
+                                 onerror="this.src='https://picsum.photos/id/1015/600/340'; this.onerror=null;">
+
                             <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-3 py-1 rounded">
                                 <?= htmlspecialchars($video['durasi'] ?? '-') ?>
                             </div>
@@ -60,13 +63,13 @@ if (!isset($_SESSION['login']) || $_SESSION['role'] !== 'admin') {
                                 <?= htmlspecialchars($video['judul']) ?>
                             </h3>
                             <p class="text-xs text-gray-400 mb-4">
-                                <?= htmlspecialchars($video['kategori']) ?> • ID: <?= $video['id'] ?>
+                                <?= htmlspecialchars($video['kategori'] ?? '-') ?> • ID: <?= $video['id'] ?>
                             </p>
                             
                             <div class="flex gap-2">
                                 <button onclick="previewVideo(<?= $video['id'] ?>, '<?= htmlspecialchars($video['video_url']) ?>', '<?= addslashes($video['judul']) ?>')" 
                                         class="flex-1 bg-[#5879AC] hover:bg-[#4A6A9C] text-center py-3 rounded-2xl text-sm font-medium transition">
-                                    ▶ Preview
+                                    Preview
                                 </button>
                                 <a href="edit-video.php?id=<?= $video['id'] ?>" 
                                    class="px-5 border border-gray-500 hover:bg-[#2A3749] rounded-2xl text-sm flex items-center justify-center">
